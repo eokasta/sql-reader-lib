@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.github.eokasta'
+version 'v1.0.0'
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -13,12 +13,9 @@ compileTestJava.options.encoding = "UTF-8"
 
 repositories {
     mavenCentral()
-
-    maven { url = 'https://jitpack.io' }
 }
 
-dependencies {
-}
+dependencies { }
 
 test {
     useJUnitPlatform()
