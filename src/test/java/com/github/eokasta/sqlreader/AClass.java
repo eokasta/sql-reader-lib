@@ -13,6 +13,8 @@ public class AClass {
     @FieldKey()
     private Macaco macaco;
 
+    public AClass() { }
+
     public AClass(String name, Integer age, Macaco macaco) {
         this.name = name;
         this.age = age;

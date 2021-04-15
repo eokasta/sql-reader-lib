@@ -29,6 +29,6 @@ public class Macaco {
 
     @Override
     public String toString() {
-        return "nesquik:10";
+        return name + ":" + age;
     }
 }

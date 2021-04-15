@@ -15,7 +15,9 @@ repositories {
     mavenCentral()
 }
 
-dependencies { }
+dependencies {
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+}
 
 test {
     useJUnitPlatform()
