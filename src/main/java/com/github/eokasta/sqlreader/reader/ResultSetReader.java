@@ -37,13 +37,12 @@ public class ResultSetReader {
             if (object == null)
                 throw new NullPointerException("query object is null.");
 
-            if (!object.getClass().equals(fieldType))
-                throw new IllegalArgumentException("Field type is not the same type as the query object.");
-
             final Pair<? extends Class<?>, ? extends Class<?>> classClassPair = new Pair<>(object.getClass(), fieldType);
             final ReaderAdapter<?, ?> readerAdapter = readerAdapterMap.get(classClassPair);
-
             final Object resultObject = (readerAdapter != null ? readerAdapter.serialize(object) : object);
+
+            if (!object.getClass().equals(fieldType))
+                throw new IllegalArgumentException("Field type is not the same type as the query object.");
 
             instances.put(fieldType, resultObject);
         }

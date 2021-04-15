@@ -12,9 +12,9 @@ public class MySQLReaderPlugin {
     public static void main(String[] args) {
         READER_ADAPTER_MAP.registerAdapter(String.class, Macaco.class, new MacacoAdapter());
 
-        final AClass aClass = RESULT_SET_ADAPTER.getFromSafe(AClass.class);
+//        final AClass aClass = RESULT_SET_ADAPTER.getFromSafe(AClass.class);
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
-        System.out.println(aClass);
+//        System.out.println(aClass);
         System.out.println("\n\n\n\n\n\n\n\n\n\n");
     }
 
