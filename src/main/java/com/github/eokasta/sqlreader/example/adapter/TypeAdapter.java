@@ -1,11 +1,8 @@
-package com.github.eokasta.sqlreader.adapter;
+package com.github.eokasta.sqlreader.example.adapter;
 
-public class PrimitiveTypeAdapter {
+public class TypeAdapter {
 
-    public Class<?> getType(Class<?> clazz) {
-        if (!clazz.isPrimitive())
-            throw new IllegalArgumentException("clazz is not primitive type.");
-
+    public Class<?> getTypeByPrimitiveOrDefault(Class<?> clazz) {
         if (clazz.equals(Character.TYPE))
             return Character.class;
         if (clazz.equals(Integer.TYPE))
@@ -23,7 +20,15 @@ public class PrimitiveTypeAdapter {
         if (clazz.equals(Byte.TYPE))
             return Byte.class;
 
-        return null;
+        return clazz;
+    }
+
+    public Class<?> getTypeByInterfacesOrDefault(Class<?> clazz, Class<?> interfaceClass) {
+        for (Class<?> anInterface : clazz.getInterfaces())
+            if (anInterface.equals(interfaceClass))
+                return anInterface;
+
+        return clazz;
     }
 
 }

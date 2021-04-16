@@ -1,14 +1,14 @@
-package com.github.eokasta.sqlreader;
+package com.github.eokasta.sqlreader.example;
 
-import com.github.eokasta.sqlreader.annotations.ReadClass;
+import com.github.eokasta.sqlreader.example.annotations.ReadClass;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @ReadClass
 public class ClassRoom {
 
     private int id;
-    private ArrayList<Student> students;
+    private List<Student> students;
 
     @Override
     public String toString() {
@@ -18,11 +18,11 @@ public class ClassRoom {
               '}';
     }
 
-    public ArrayList<Student> getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(ArrayList<Student> students) {
+    public void setStudents(List<Student> students) {
         this.students = students;
     }
 

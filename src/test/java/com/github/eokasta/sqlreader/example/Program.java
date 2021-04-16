@@ -1,13 +1,13 @@
-package com.github.eokasta.sqlreader;
+package com.github.eokasta.sqlreader.example;
 
-import com.github.eokasta.sqlreader.adapter.ReaderAdapterMap;
-import com.github.eokasta.sqlreader.reader.ResultSetReader;
+import com.github.eokasta.sqlreader.example.adapter.ReaderAdapterMap;
+import com.github.eokasta.sqlreader.example.reader.ResultSetReader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class Program {
@@ -21,7 +21,7 @@ public class Program {
         openConnection();
         READER_ADAPTER_MAP
               .registerAdapter(String.class,
-                    new TypeToken<ArrayList<Student>>() {
+                    new TypeToken<List<Student>>() {
                     }.getRawType(),
                     new ListStudentAdapter()
               );

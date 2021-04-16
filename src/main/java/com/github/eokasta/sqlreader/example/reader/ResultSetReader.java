@@ -1,13 +1,13 @@
-package com.github.eokasta.sqlreader.reader;
+package com.github.eokasta.sqlreader.example.reader;
 
-import com.github.eokasta.sqlreader.adapter.PrimitiveTypeAdapter;
-import com.github.eokasta.sqlreader.adapter.ReaderAdapter;
-import com.github.eokasta.sqlreader.adapter.ReaderAdapterMap;
-import com.github.eokasta.sqlreader.annotations.IgnoreField;
-import com.github.eokasta.sqlreader.annotations.ReadClass;
-import com.github.eokasta.sqlreader.annotations.ReadField;
-import com.github.eokasta.sqlreader.model.ClassTypeModel;
-import com.github.eokasta.sqlreader.model.FieldModel;
+import com.github.eokasta.sqlreader.example.adapter.TypeAdapter;
+import com.github.eokasta.sqlreader.example.adapter.ReaderAdapter;
+import com.github.eokasta.sqlreader.example.adapter.ReaderAdapterMap;
+import com.github.eokasta.sqlreader.example.annotations.IgnoreField;
+import com.github.eokasta.sqlreader.example.annotations.ReadClass;
+import com.github.eokasta.sqlreader.example.annotations.ReadField;
+import com.github.eokasta.sqlreader.example.model.ClassTypeModel;
+import com.github.eokasta.sqlreader.example.model.FieldModel;
 import javafx.util.Pair;
 
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class ResultSetReader {
 
-    private static final PrimitiveTypeAdapter PRIMITIVE_TYPE_ADAPTER = new PrimitiveTypeAdapter();
+    private static final TypeAdapter TYPE_ADAPTER = new TypeAdapter();
 
     private final ReaderAdapterMap readerAdapterMap;
     private final Map<Class<?>, ClassTypeModel> classTypeCache = new HashMap<>();
@@ -72,17 +72,17 @@ public class ResultSetReader {
             final Class<?> fieldType = fieldModel.getType();
             final Pair<? extends Class<?>, ? extends Class<?>> classClassPair =
                   new Pair<>(object.getClass(), fieldType);
-
             final ReaderAdapter<?, ?> readerAdapter = readerAdapterMap.get(classClassPair);
-            final Object resultObject = (readerAdapter != null ? readerAdapter.parse(object) : object);
-
-            final Class<?> fieldTypeParsed = fieldType.isPrimitive() ? PRIMITIVE_TYPE_ADAPTER.getType(fieldType) : fieldType;
-            final Class<?> resultObjectClass = resultObject.getClass();
-
-            if (!resultObjectClass.equals(fieldTypeParsed))
+            final Class<?> parsedFieldType =
+                  fieldType.isPrimitive() ? TYPE_ADAPTER.getTypeByPrimitiveOrDefault(fieldType) : fieldType;
+            final Object parsedObject =
+                  readerAdapter != null ? readerAdapter.parse(object) : object;
+            final Class<?> parsedObjectType =
+                  TYPE_ADAPTER.getTypeByInterfacesOrDefault(parsedObject.getClass(), parsedFieldType);
+            if (!parsedObjectType.equals(parsedFieldType))
                 throw new IllegalArgumentException("Field type is not the same type as the query object.");
 
-            instances.put(fieldType, resultObject);
+            instances.put(fieldType, parsedObject);
         }
 
         final T instance = type.newInstance();

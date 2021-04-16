@@ -1,4 +1,4 @@
-package com.github.eokasta.sqlreader.model;
+package com.github.eokasta.sqlreader.example.model;
 
 import java.lang.reflect.Field;
 

@@ -1,4 +1,4 @@
-package com.github.eokasta.sqlreader.adapter;
+package com.github.eokasta.sqlreader.example.adapter;
 
 public interface ReaderAdapter<T, T2> {
 

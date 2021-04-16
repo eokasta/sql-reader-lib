@@ -1,4 +1,4 @@
-package com.github.eokasta.sqlreader;
+package com.github.eokasta.sqlreader.example;
 
 import java.util.UUID;
 

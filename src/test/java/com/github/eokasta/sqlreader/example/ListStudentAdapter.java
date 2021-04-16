@@ -1,10 +1,9 @@
-package com.github.eokasta.sqlreader;
+package com.github.eokasta.sqlreader.example;
 
-import com.github.eokasta.sqlreader.adapter.ReaderAdapter;
+import com.github.eokasta.sqlreader.example.adapter.ReaderAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
