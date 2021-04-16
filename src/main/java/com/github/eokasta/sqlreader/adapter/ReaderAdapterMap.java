@@ -21,11 +21,4 @@ public class ReaderAdapterMap extends HashMap<Pair<Class<?>, Class<?>>, ReaderAd
         return this;
     }
 
-    public <T> T parse(Object parseFrom, T parseTo) {
-        final ReaderAdapter<?, ?> readerAdapter = get(new Pair<>(parseFrom, parseTo));
-        if (readerAdapter == null) return null;
-
-        return (T) readerAdapter.deserialize(parseFrom);
-    }
-
 }

@@ -1,8 +1,11 @@
 package com.github.eokasta.sqlreader.reader;
 
+import com.github.eokasta.sqlreader.adapter.PrimitiveTypeAdapter;
 import com.github.eokasta.sqlreader.adapter.ReaderAdapter;
 import com.github.eokasta.sqlreader.adapter.ReaderAdapterMap;
-import com.github.eokasta.sqlreader.annotations.FieldKey;
+import com.github.eokasta.sqlreader.annotations.IgnoreField;
+import com.github.eokasta.sqlreader.annotations.ReadClass;
+import com.github.eokasta.sqlreader.annotations.ReadField;
 import com.github.eokasta.sqlreader.model.ClassTypeModel;
 import com.github.eokasta.sqlreader.model.FieldModel;
 import javafx.util.Pair;
@@ -17,6 +20,8 @@ import java.util.Map;
 
 public class ResultSetReader {
 
+    private static final PrimitiveTypeAdapter PRIMITIVE_TYPE_ADAPTER = new PrimitiveTypeAdapter();
+
     private final ReaderAdapterMap readerAdapterMap;
     private final Map<Class<?>, ClassTypeModel> classTypeCache = new HashMap<>();
 
@@ -24,7 +29,7 @@ public class ResultSetReader {
         this.readerAdapterMap = readerAdapterMap;
     }
 
-    public <T> T getFrom(ResultSet resultSet, Class<T> type)
+    public <T> T parse(ResultSet resultSet, Class<T> type)
           throws IllegalAccessException, InstantiationException, SQLException, NoSuchFieldException {
         final Map<Class<?>, Object> instances = new LinkedHashMap<>();
         ClassTypeModel classTypeModel = classTypeCache.get(type);
@@ -33,18 +38,29 @@ public class ResultSetReader {
             classTypeModel = new ClassTypeModel(type);
             classTypeCache.put(type, classTypeModel);
 
-            for (Field declaredField : type.getDeclaredFields()) {
-                declaredField.setAccessible(true);
-                final Class<?> fieldType = declaredField.getType();
+            if (type.isAnnotationPresent(ReadClass.class)) {
+                for (Field declaredField : type.getDeclaredFields()) {
+                    declaredField.setAccessible(true);
+                    if (declaredField.isAnnotationPresent(IgnoreField.class)) continue;
 
-                if (!declaredField.isAnnotationPresent(FieldKey.class))
-                    continue;
+                    final Class<?> fieldType = declaredField.getType();
+                    final String fieldName = declaredField.getName();
+                    classTypeModel.getFields().put(fieldName, new FieldModel(declaredField, fieldType, fieldName));
+                }
+            } else {
+                for (Field declaredField : type.getDeclaredFields()) {
+                    declaredField.setAccessible(true);
+                    final Class<?> fieldType = declaredField.getType();
 
-                final FieldKey annotation = declaredField.getAnnotation(FieldKey.class);
-                final String key = annotation.key();
-                final String fieldName = key.isEmpty() ? declaredField.getName() : key;
+                    if (!declaredField.isAnnotationPresent(ReadField.class))
+                        continue;
 
-                classTypeModel.getFields().put(fieldName, new FieldModel(declaredField, fieldType, fieldName));
+                    final ReadField annotation = declaredField.getAnnotation(ReadField.class);
+                    final String key = annotation.key();
+                    final String fieldName = key.isEmpty() ? declaredField.getName() : key;
+
+                    classTypeModel.getFields().put(fieldName, new FieldModel(declaredField, fieldType, fieldName));
+                }
             }
         }
 
@@ -56,10 +72,14 @@ public class ResultSetReader {
             final Class<?> fieldType = fieldModel.getType();
             final Pair<? extends Class<?>, ? extends Class<?>> classClassPair =
                   new Pair<>(object.getClass(), fieldType);
-            final ReaderAdapter<?, ?> readerAdapter = readerAdapterMap.get(classClassPair);
-            final Object resultObject = (readerAdapter != null ? readerAdapter.serialize(object) : object);
 
-            if (!resultObject.getClass().equals(fieldType))
+            final ReaderAdapter<?, ?> readerAdapter = readerAdapterMap.get(classClassPair);
+            final Object resultObject = (readerAdapter != null ? readerAdapter.parse(object) : object);
+
+            final Class<?> fieldTypeParsed = fieldType.isPrimitive() ? PRIMITIVE_TYPE_ADAPTER.getType(fieldType) : fieldType;
+            final Class<?> resultObjectClass = resultObject.getClass();
+
+            if (!resultObjectClass.equals(fieldTypeParsed))
                 throw new IllegalArgumentException("Field type is not the same type as the query object.");
 
             instances.put(fieldType, resultObject);
@@ -81,9 +101,9 @@ public class ResultSetReader {
         return instance;
     }
 
-    public <T> T getFromSafe(ResultSet resultSet, Class<T> type) {
+    public <T> T parseSafe(ResultSet resultSet, Class<T> type) {
         try {
-            return getFrom(resultSet, type);
+            return parse(resultSet, type);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

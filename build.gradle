@@ -16,7 +16,8 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+    implementation 'mysql:mysql-connector-java:8.0.23'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 test {
