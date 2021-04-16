@@ -72,7 +72,7 @@ public class ResultSetReader {
             final Class<?> fieldType = fieldModel.getType();
             final Pair<? extends Class<?>, ? extends Class<?>> classClassPair =
                   new Pair<>(object.getClass(), fieldType);
-            final ReaderAdapter<?, ?> readerAdapter = readerAdapterMap.get(classClassPair);
+            final ReaderAdapter<?> readerAdapter = readerAdapterMap.get(classClassPair);
             final Class<?> parsedFieldType =
                   fieldType.isPrimitive() ? TYPE_ADAPTER.getTypeByPrimitiveOrDefault(fieldType) : fieldType;
             final Object parsedObject =

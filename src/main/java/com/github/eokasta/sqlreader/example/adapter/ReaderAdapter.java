@@ -1,9 +1,7 @@
 package com.github.eokasta.sqlreader.example.adapter;
 
-public interface ReaderAdapter<T, T2> {
+public interface ReaderAdapter<T> {
 
-    T2 parse(Object o);
-
-    T unparse(Object o);
+    T parse(Object o);
 
 }

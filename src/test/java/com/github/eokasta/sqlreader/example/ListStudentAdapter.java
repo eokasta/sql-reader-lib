@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStudentAdapter implements ReaderAdapter<String, ArrayList<Student>> {
+public class ListStudentAdapter implements ReaderAdapter<ArrayList<Student>> {
 
     private final Gson gson = new Gson();
 
@@ -20,8 +20,4 @@ public class ListStudentAdapter implements ReaderAdapter<String, ArrayList<Stude
         return gson.fromJson(json, type);
     }
 
-    @Override
-    public String unparse(Object o) {
-        return null;
-    }
 }
