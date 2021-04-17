@@ -21,8 +21,7 @@ public class Program {
         openConnection();
         READER_ADAPTER_MAP
               .registerAdapter(String.class,
-                    new TypeToken<List<Student>>() {
-                    }.getRawType(),
+                    new TypeToken<List<Student>>() {}.getRawType(),
                     new ListStudentAdapter()
               );
 
@@ -38,6 +37,7 @@ public class Program {
         ) {
             if (resultSet != null && resultSet.next()) {
                 final ClassRoom classRoom = RESULT_SET_READER.parseSafe(resultSet, ClassRoom.class);
+
                 System.out.println("Objeto da classe: " + classRoom);
                 System.out.println("Classe " + classRoom.getId() + ":");
                 for (Student student : classRoom.getStudents()) {

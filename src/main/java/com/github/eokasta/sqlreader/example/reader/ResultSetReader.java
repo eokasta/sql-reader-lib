@@ -25,6 +25,9 @@ public class ResultSetReader {
     private final ReaderAdapterMap readerAdapterMap;
     private final Map<Class<?>, ClassTypeModel> classTypeCache = new HashMap<>();
 
+    public ResultSetReader() {
+        this.readerAdapterMap = new ReaderAdapterMap();
+    }
     public ResultSetReader(ReaderAdapterMap readerAdapterMap) {
         this.readerAdapterMap = readerAdapterMap;
     }
